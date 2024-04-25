@@ -197,7 +197,7 @@ Vue.createApp({
       const data = { search: this.myOrdersSearch };
       try {
         this.myOrders = await this.sendRequestToServer("order/myorders", data);
-        if (!this.myOrdersSearch) {
+        if (!this.myOrdersSearch && this.myOrders) {
           this.user.ipAddress = this.myOrders[0].ip_address;
         }
       } catch (error) {
