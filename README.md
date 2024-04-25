@@ -1,8 +1,6 @@
-# AfterSchool - Web App with Vue.js
+# AfterSchool - Frontend with Vue.js
 
-Module: Web-Based Mobile App Development (CST3145) - Coursework 1
+Module: Web-Based Mobile App Development (CST3145) - Coursework 2 (Part 1/2)
 
-- GitHub Repository: https://github.com/BonaFideBOSS/AfterSchool/
-- GitHub Page: https://bonafideboss.github.io/AfterSchool/ (Live link: Use this link to run the app directly)
-
-P.S. This is my first Vue.js application
+- GitHub Repository: https://github.com/BonaFideBOSS/AfterSchoolFrontend/
+- GitHub Page: https://bonafideboss.github.io/AfterSchoolFrontend/ (Live link: Use this link to run the app directly)
