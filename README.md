@@ -1,5 +1,5 @@
 <h1>
-  <span>AfterSchool - Web App with the MEVN Stack</span>
+  <span>AfterSchool - Web App With the MEVN Stack</span>
   <img src="https://bonafideboss.github.io/AfterSchoolFrontend/assets/images/favicon.ico" align="left"/>
 </h1>
 
