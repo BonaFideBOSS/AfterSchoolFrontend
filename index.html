@@ -414,10 +414,11 @@
               <i class="fa-duotone fa-3x fa-fw"
                 :class="`${ratingModalTwoLesson.icon} text-${ratingModalTwoLesson.color}`"></i>
               <h5 class="mt-2">{{ratingModalTwoLesson.subject}}</h5>
-              <div>
-                <i v-for="index in 5" :class="[index <= userRating ?'fas':'fal']" class="fa-star fa-2x text-warning"
-                  @click="userRating = index" role="button"></i>
-              </div>
+              <ul class="rating justify-content-center" data-mdb-rating-init data-mdb-dynamic="true">
+                <li v-for="rating,index in ['Bad','Poor','OK','Good','Excellent']">
+                  <i class="fal fa-star fa-2x text-warning" :title="rating" @click="userRating = index+1"></i>
+                </li>
+              </ul>
               <p class="mt-3 mb-0" v-if="ratingMessage" v-html="ratingMessage"></p>
             </div>
             <div class="modal-footer border-0 mx-auto">

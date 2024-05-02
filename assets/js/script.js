@@ -32,28 +32,6 @@ Vue.createApp({
     };
   },
 
-  created() {
-    this.getLessons();
-  },
-
-  mounted() {
-    this.sortOptionsSelector();
-  },
-
-  watch: {
-    search: "getLessons",
-    sortBy: "getLessons",
-    sortOrderAsc: "getLessons",
-    myOrdersSearch: "getMyOrders",
-    currentPage(page) {
-      if (page == "Home") {
-        this.$nextTick(() => {
-          this.sortOptionsSelector();
-        });
-      }
-    },
-  },
-
   methods: {
     // Function to send request to the server
     async sendRequestToServer(route, data, method = "POST") {
@@ -268,6 +246,34 @@ Vue.createApp({
       return this.cartDetails.reduce((sum, lesson) => sum + lesson.total, 0);
     },
     // End of Shopping Cart Functionality
+  },
+
+  created() {
+    this.getLessons();
+  },
+
+  mounted() {
+    this.sortOptionsSelector();
+    new mdb.Rating(document.querySelector(".rating"));
+  },
+
+  watch: {
+    search: "getLessons",
+    sortBy: "getLessons",
+    sortOrderAsc: "getLessons",
+    myOrdersSearch: "getMyOrders",
+    currentPage(page) {
+      if (page == "Home") {
+        this.$nextTick(() => {
+          this.sortOptionsSelector();
+        });
+      }
+    },
+    ratingModalTwoLesson() {
+      document.querySelectorAll(".rating .fa-star").forEach((el) => {
+        el.classList.remove("fas", "active");
+      });
+    },
   },
 }).mount("#app");
 
