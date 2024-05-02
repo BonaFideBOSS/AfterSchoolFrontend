@@ -413,7 +413,7 @@
             <div class="modal-body text-center">
               <i class="fa-duotone fa-3x fa-fw"
                 :class="`${ratingModalTwoLesson.icon} text-${ratingModalTwoLesson.color}`"></i>
-              <h5 class="mt-2">{{ratingModalTwoLesson.subject}}</h5>
+              <h5 class="mt-2 mb-3">{{ratingModalTwoLesson.subject}}</h5>
               <ul class="rating justify-content-center" data-mdb-rating-init data-mdb-dynamic="true">
                 <li v-for="rating,index in ['Bad','Poor','OK','Good','Excellent']">
                   <i class="fal fa-star fa-2x text-warning" :title="rating" @click="userRating = index+1"></i>
