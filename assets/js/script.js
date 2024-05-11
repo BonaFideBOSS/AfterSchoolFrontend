@@ -2,7 +2,7 @@ Vue.createApp({
   data() {
     return {
       sitename: "AfterSchool",
-      serverURL: "https://afterschoolbackend.vercel.app/",
+      serverURL: "http://10.63.3.57:8000/",
       pages: ["Home", "My Orders"],
       currentPage: "Home",
       lessons: null,
@@ -291,6 +291,9 @@ Vue.createApp({
     search: "getLessons",
     sortBy: "getLessons",
     sortOrderAsc: "getLessons",
+    "pagination.page"() {
+      window.scrollTo(0, 0);
+    },
     myOrdersSearch: "getMyOrders",
     ratingModalTwoLesson() {
       document.querySelectorAll(".rating .fa-star").forEach((el) => {
