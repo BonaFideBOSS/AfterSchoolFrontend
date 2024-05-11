@@ -9,6 +9,15 @@ Vue.createApp({
       search: "",
       sortBy: "subject",
       sortOrderAsc: true,
+      pagination: {
+        page: 1,
+        length: 5,
+        total: 0,
+        filtered: 0,
+        totalPages: 1,
+        start: 1,
+        end: 5,
+      },
       savedLessons: [],
       cart: [],
       user: {
@@ -52,10 +61,13 @@ Vue.createApp({
         search: this.search,
         sortBy: this.sortBy,
         sortOrder: this.sortOrderAsc ? "asc" : "desc",
+        page: this.pagination.page,
+        length: this.pagination.length,
       };
       try {
-        this.lessons = await this.sendRequestToServer("lessons", data);
-        this.savedLessons = this.search ? this.savedLessons : this.lessons;
+        const response = await this.sendRequestToServer("lessons", data);
+        this.pagination = response.pagination;
+        this.lessons = response.lessons;
       } catch (error) {
         this.lessons = [];
         this.lessonsErrorMessage = "Failed to load lessons.";
@@ -72,7 +84,13 @@ Vue.createApp({
     // Add to Cart Functionality
     addToCart(lesson) {
       if (this.canAddToCart(lesson)) {
-        this.cart.push(lesson._id);
+        const lessonId = lesson._id;
+        this.cart.push(lessonId);
+        const isLessonSaved =
+          this.savedLessons.filter((l) => l._id === lessonId).length === 0;
+        if (isLessonSaved) {
+          this.savedLessons.push(lesson);
+        }
       }
     },
 
@@ -221,7 +239,9 @@ Vue.createApp({
     },
 
     sortOptionsSelector() {
-      new mdb.Select(document.getElementById("sortBy"));
+      document.querySelectorAll("select").forEach((el) => {
+        mdb.Select.getOrCreateInstance(el);
+      });
     },
   },
 
@@ -258,17 +278,20 @@ Vue.createApp({
   },
 
   watch: {
+    lessons() {
+      this.$nextTick(() => {
+        this.sortOptionsSelector();
+      });
+    },
+    currentPage() {
+      this.$nextTick(() => {
+        this.sortOptionsSelector();
+      });
+    },
     search: "getLessons",
     sortBy: "getLessons",
     sortOrderAsc: "getLessons",
     myOrdersSearch: "getMyOrders",
-    currentPage(page) {
-      if (page == "Home") {
-        this.$nextTick(() => {
-          this.sortOptionsSelector();
-        });
-      }
-    },
     ratingModalTwoLesson() {
       document.querySelectorAll(".rating .fa-star").forEach((el) => {
         el.classList.remove("fas", "active");
