@@ -113,7 +113,7 @@
             <div v-if="lessons.length > 0" class="mt-5">
               <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
                 <div v-for="lesson in lessons" class="col">
-                  <div class="card h-100 rounded-4 w-100" :class="[lesson.spaces == 0 ? 'opacity-50' : '']">
+                  <div class="card h-100 rounded-7 w-100" :class="[lesson.spaces == 0 ? 'opacity-50' : '']">
                     <div class="card-body d-flex">
                       <div class="d-flex flex-column">
                         <h5 class="card-title">{{lesson.subject}}</h5>
@@ -393,7 +393,7 @@
       <!-- Order Completion Message -->
       <div class="modal fade" id="checkoutResult" tabindex="-1" data-mdb-backdrop="static" data-mdb-keyboard="false">
         <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
+          <div class="modal-content rounded-7">
             <div class="modal-body text-center">
               <div v-if="checkoutSuccessful">
                 <i class="fa-light fa-circle-check fa-5x text-success my-4"></i>
@@ -422,7 +422,7 @@
       <!-- Rating Modal One - Lesson Selection -->
       <div class="modal fade" id="ratingModalOne" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-          <div class="modal-content">
+          <div class="modal-content rounded-7">
             <div class="modal-header">
               <h5 class="modal-title">Select a lesson</h5>
               <button type="button" class="btn-close" data-mdb-ripple-init data-mdb-dismiss="modal"></button>
@@ -454,7 +454,7 @@
       <!-- Rating Modal Two - Lesson Rating -->
       <div class="modal fade" id="ratingModalTwo" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
+          <div class="modal-content rounded-7">
             <div class="modal-header">
               <h5 class="modal-title">Rate this lesson</h5>
               <button type="button" class="btn-close" data-mdb-ripple-init data-mdb-dismiss="modal"></button>
