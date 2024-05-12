@@ -34,6 +34,15 @@ Vue.createApp({
       myOrders: null,
       myOrdersSearch: "",
       myOrdersLoading: false,
+      myOrdersPagination: {
+        page: 0,
+        length: 0,
+        total: 0,
+        filtered: 0,
+        totalPages: 0,
+        start: 0,
+        end: 0,
+      },
       ratingModalOneOrder: {},
       ratingModalTwoLesson: {},
       userRating: 0,
@@ -61,8 +70,7 @@ Vue.createApp({
         search: this.search,
         sortBy: this.sortBy,
         sortOrder: this.sortOrderAsc ? "asc" : "desc",
-        page: this.pagination.page,
-        length: this.pagination.length,
+        ...this.pagination,
       };
       try {
         const response = await this.sendRequestToServer("lessons", data);
@@ -190,9 +198,11 @@ Vue.createApp({
     // Function to get user's order history
     async getMyOrders() {
       this.myOrdersLoading = true;
-      const data = { search: this.myOrdersSearch };
+      const data = { search: this.myOrdersSearch, ...this.myOrdersPagination };
       try {
-        this.myOrders = await this.sendRequestToServer("order/myorders", data);
+        const response = await this.sendRequestToServer("order/myorders", data);
+        this.myOrdersPagination = response.pagination;
+        this.myOrders = response.orders;
         if (!this.myOrdersSearch && this.myOrders) {
           this.user.ipAddress = this.myOrders[0].ip_address;
         }
@@ -243,6 +253,20 @@ Vue.createApp({
         mdb.Select.getOrCreateInstance(el);
       });
     },
+
+    displayedPages(pagination) {
+      const visibleButtons = 3;
+      const pageCount = pagination.totalPages;
+      let start = Math.max(1, pagination.page - (visibleButtons - 2));
+      let end = Math.min(pageCount, start + (visibleButtons - 1));
+
+      if (end - start < visibleButtons - 1) {
+        end = Math.min(pageCount, pagination.page + (visibleButtons - 2));
+        start = Math.max(1, end - (visibleButtons - 1));
+      }
+
+      return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+    },
   },
 
   computed: {
@@ -288,13 +312,22 @@ Vue.createApp({
         this.sortOptionsSelector();
       });
     },
-    search: "getLessons",
+    search: debounce(function () {
+      this.getLessons();
+    }),
     sortBy: "getLessons",
     sortOrderAsc: "getLessons",
     "pagination.page"() {
       window.scrollTo(0, 0);
     },
-    myOrdersSearch: "getMyOrders",
+    myOrdersSearch: debounce(function () {
+      this.getMyOrders();
+    }),
+    myOrders() {
+      this.$nextTick(() => {
+        this.sortOptionsSelector();
+      });
+    },
     ratingModalTwoLesson() {
       document.querySelectorAll(".rating .fa-star").forEach((el) => {
         el.classList.remove("fas", "active");
@@ -306,3 +339,13 @@ Vue.createApp({
 const btnLoader = `<div class="d-flex gap-2 align-items-center">
     <span class="spinner-border spinner-border-sm"></span> Please wait...
   </div>`;
+
+function debounce(func, delay = 300) {
+  let timer;
+  return function () {
+    const context = this;
+    const args = arguments;
+    clearTimeout(timer);
+    timer = setTimeout(() => func.apply(context, args), delay);
+  };
+}
