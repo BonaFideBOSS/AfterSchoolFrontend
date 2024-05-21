@@ -10,8 +10,9 @@ Vue.createApp({
       sortBy: "subject",
       sortOrderAsc: true,
       pagination: {
+        defaultLength: 6,
         page: 0,
-        length: 0,
+        length: 6,
         total: 0,
         filtered: 0,
         totalPages: 0,
@@ -74,7 +75,7 @@ Vue.createApp({
       };
       try {
         const response = await this.sendRequestToServer("lessons", data);
-        this.pagination = response.pagination;
+        this.pagination = { ...this.pagination, ...response.pagination };
         this.lessons = response.lessons;
       } catch (error) {
         this.lessons = [];
@@ -94,11 +95,14 @@ Vue.createApp({
       if (this.canAddToCart(lesson)) {
         const lessonId = lesson._id;
         this.cart.push(lessonId);
+        notify(`Added <b>${lesson.subject}</b> to cart!`);
         const isLessonSaved =
           this.savedLessons.filter((l) => l._id === lessonId).length === 0;
         if (isLessonSaved) {
           this.savedLessons.push(lesson);
         }
+      } else {
+        notify("No more spaces available.", "danger");
       }
     },
 
@@ -141,6 +145,7 @@ Vue.createApp({
       this.user.isPhoneValid = /^\d+$/.test(this.user.phone);
     },
 
+    // Function to submit lesson order
     async submitOrder(event) {
       const btn = event.target.querySelector('[type="submit"]');
       const btnText = btn.innerHTML;
@@ -336,7 +341,7 @@ Vue.createApp({
   },
 }).mount("#app");
 
-const btnLoader = `<div class="d-flex gap-2 align-items-center">
+const btnLoader = `<div class="d-flex gap-2 justify-content-center align-items-center">
     <span class="spinner-border spinner-border-sm"></span> Please wait...
   </div>`;
 
@@ -348,4 +353,32 @@ function debounce(func, delay = 300) {
     clearTimeout(timer);
     timer = setTimeout(() => func.apply(context, args), delay);
   };
+}
+
+function notify(message, color = "success", delay = 2000, stacking = false) {
+  document.querySelectorAll(".alert").forEach((i) => i.remove());
+
+  const alert = document.createElement("div");
+  alert.innerHTML = `
+    <div class="d-flex justify-content-between gap-4">
+      <p class="mb-0">${message}</p>
+      <button type="button" class="btn-close" data-mdb-dismiss="alert"></button>
+    </div>
+  `;
+  alert.classList.add("alert", "fade", "shadow-5");
+
+  document.body.appendChild(alert);
+
+  const alertInstance = new mdb.Alert(alert, {
+    color: color,
+    stacking: stacking,
+    offset: 20,
+    hidden: true,
+    position: "top-center",
+    autohide: true,
+    delay: delay,
+    animation: true,
+  });
+
+  alertInstance.show();
 }

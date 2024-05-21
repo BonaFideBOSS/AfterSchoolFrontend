@@ -25,28 +25,31 @@
 </head>
 
 <body>
-  <div id="app" v-cloak>
-    <nav class="navbar navbar-expand-lg shadow-3">
-      <div class="container-fluid">
-        <a class="navbar-brand fs-3" href="index.html">
-          <img class="me-3" src="assets/images/logo.png" />
-          <span class="satisfy-regular text-danger fw-bold">After</span><span
-            class="satisfy-regular fw-bold">School</span>
-        </a>
-        <button class="navbar-toggler" type="button" data-mdb-ripple-init data-mdb-toggle="sidenav"
-          data-mdb-target="#sidenav-1">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse">
-          <div class="navbar-nav ms-auto">
-            <a class="nav-link" v-for="page in pages" :text="page" :href="currentPage == page ? null: ''"
-              :class="{ 'active': currentPage === page }" @click.prevent="currentPage === page ? '' : switchPage(page)">
-            </a>
-            <a class="nav-link" :href="serverURL" target="_blank">Administrator</a>
+  <div id="app" v-cloak class="overflow-hidden">
+    <div class="container">
+      <nav class="navbar navbar-expand-lg shadow-2 rounded-7 mt-3 p-2 p-md-3">
+        <div class="container-fluid">
+          <a class="navbar-brand fs-3" href="index.html">
+            <img class="me-3" src="assets/images/logo.png" />
+            <span class="satisfy-regular text-danger fw-bold">After</span><span
+              class="satisfy-regular fw-bold">School</span>
+          </a>
+          <button class="navbar-toggler" type="button" data-mdb-ripple-init data-mdb-toggle="sidenav"
+            data-mdb-target="#sidenav-1">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse">
+            <div class="navbar-nav ms-auto">
+              <a class="nav-link" v-for="page in pages" :text="page" :href="currentPage == page ? null: ''"
+                :class="{ 'active': currentPage === page }"
+                @click.prevent="currentPage === page ? '' : switchPage(page)">
+              </a>
+              <a class="nav-link" :href="serverURL" target="_blank">Administrator</a>
+            </div>
           </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
 
     <nav data-mdb-sidenav-init data-mdb-scroll-container=".sidenav-menu" id="sidenav-1" class="sidenav">
       <div class="text-center">
@@ -113,8 +116,13 @@
             <div v-if="lessons.length > 0" class="mt-5">
               <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
                 <div v-for="lesson in lessons" class="col">
-                  <div class="card h-100 rounded-7 w-100" :class="[lesson.spaces == 0 ? 'opacity-50' : '']">
-                    <div class="card-body d-flex">
+                  <div class="card h-100 rounded-7 w-100"
+                    :class="[lesson.spaces == 0 || !canAddToCart(lesson) ? 'opacity-50' : 'lesson-card']"
+                    @click="addToCart(lesson)" data-mdb-ripple-init data-mdb-ripple-color="primary" role="button">
+                    <div class="card-body d-flex gap-4">
+                      <div :class="`my-auto text-${lesson.color}`">
+                        <i class="fa-duotone fa-3x fa-fw" :class="lesson.icon"></i>
+                      </div>
                       <div class="d-flex flex-column">
                         <h5 class="card-title">{{lesson.subject}}</h5>
                         <h6 class="card-subtitle mb-2 text-body-secondary">AED {{lesson.price}}</h6>
@@ -128,7 +136,7 @@
                             {{lesson.spaces}} spaces
                           </span>
                         </p>
-                        <div class="d-flex gap-2">
+                        <!-- <div class="d-flex gap-2">
                           <button @click="addToCart(lesson)" :disabled="!canAddToCart(lesson)"
                             class="mt-auto btn btn-sm rounded-4" data-mdb-ripple-init data-mdb-ripple-color="dark"
                             :class="`btn-outline-${ cartItemCount(lesson._id) > 0 ? 'success' : 'primary'}`">
@@ -140,11 +148,9 @@
                             data-mdb-ripple-color="dark">
                             <i class="fa-solid fa-trash-can"></i>
                           </button>
-                        </div>
+                        </div> -->
                       </div>
-                      <div :class="`ms-auto text-${lesson.color}`">
-                        <i class="fa-duotone fa-3x" :class="lesson.icon"></i>
-                      </div>
+
                     </div>
                   </div>
                 </div>
@@ -193,6 +199,7 @@
                 </nav>
                 <div>
                   <select v-model="pagination.length" id="lessonsPerPage" @change="getLessons">
+                    <option :value="pagination.defaultLength">Default</option>
                     <option value="5">5</option>
                     <option value="10">10</option>
                     <option :value="pagination.total">All</option>
@@ -268,40 +275,42 @@
             </div>
             <!-- End of Shopping Cart -->
 
-            <h2 class="fw-semibold mt-5">Checkout</h2>
-            <p class="text-muted mb-4">Please fill the checkout form.</p>
+            <div class="text-center mt-5">
+              <h2 class="fw-semibold">Checkout</h2>
+              <p class="text-muted mb-4">Please fill the checkout form.</p>
 
-            <!-- Checkout Form -->
-            <form @submit.prevent="submitOrder" class="col-md-8 col-lg-5">
-              <div class="mb-3">
-                <div class="form-floating">
-                  <input v-model="user.name" @input="isUserNameValid" type="text" id="username" class="form-control"
-                    placeholder="username" autocomplete="off"
-                    :class="[!user.isNameValid && user.name ? 'border-danger' : '']" />
-                  <label for="username">Name</label>
+              <!-- Checkout Form -->
+              <form @submit.prevent="submitOrder" class="offset-md-3 col-md-6 offset-lg-4 col-lg-4">
+                <div class="mb-3">
+                  <div class="form-floating">
+                    <input v-model="user.name" @input="isUserNameValid" type="text" id="username" class="form-control"
+                      placeholder="username" autocomplete="off"
+                      :class="[!user.isNameValid && user.name ? 'border-danger' : '']" />
+                    <label for="username">Name</label>
+                  </div>
+                  <span v-if="!user.isNameValid && user.name" class="small text-danger">
+                    Name must only contain letters.
+                  </span>
                 </div>
-                <span v-if="!user.isNameValid && user.name" class="small text-danger">
-                  Name must only contain letters.
-                </span>
-              </div>
 
-              <div class="mb-3">
-                <div class="form-floating">
-                  <input v-model="user.phone" @input="isUserPhoneValid" type="tel" id="phone" class="form-control"
-                    placeholder="phone" autocomplete="off"
-                    :class="[!user.isPhoneValid && user.phone ? 'border-danger' : '']" />
-                  <label for="phone">Phone</label>
+                <div class="mb-3">
+                  <div class="form-floating">
+                    <input v-model="user.phone" @input="isUserPhoneValid" type="tel" id="phone" class="form-control"
+                      placeholder="phone" autocomplete="off"
+                      :class="[!user.isPhoneValid && user.phone ? 'border-danger' : '']" />
+                    <label for="phone">Phone</label>
+                  </div>
+                  <span v-if="!user.isPhoneValid && user.phone" class="small text-danger">
+                    Phone must only contain numbers.
+                  </span>
                 </div>
-                <span v-if="!user.isPhoneValid && user.phone" class="small text-danger">
-                  Phone must only contain numbers.
-                </span>
-              </div>
 
-              <button :disabled="!(user.isNameValid && user.isPhoneValid)" type="submit" class="btn btn-lg btn-primary"
-                data-mdb-ripple-init>
-                Checkout
-              </button>
-            </form>
+                <button :disabled="!(user.isNameValid && user.isPhoneValid)" type="submit"
+                  class="w-100 btn btn-lg btn-primary" data-mdb-ripple-init>
+                  Checkout
+                </button>
+              </form>
+            </div>
             <!-- End of Checkout Form -->
           </div>
 
@@ -326,6 +335,8 @@
             <input v-model="myOrdersSearch" @input="myOrdersLoading = true" id="myOrdersSearch"
               class="form-control border-0" type="text" placeholder="Search by name or phone" autocomplete="off"
               @keyup.enter="getMyOrders" />
+            <span v-if="myOrdersSearch" class="input-group-text border-0" role="button"
+              @click="myOrdersSearch = ''">✕</span>
           </div>
 
           <div v-if="!myOrders" class="text-center my-5">

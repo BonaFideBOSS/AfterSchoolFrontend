@@ -64,6 +64,15 @@
   display: none;
 }
 
+.lesson-card {
+  transition: transform .3s ease-in-out;
+}
+
+.lesson-card:hover {
+  transform: scale(1.1);
+  z-index: 999;
+}
+
 #cart {
   position: fixed;
   bottom: 7%;
@@ -177,4 +186,20 @@
   100% {
     transform: scale(2.25);
   }
+}
+
+@media (max-width: 587px) {
+  .alert {
+    width: 70%;
+  }
+}
+
+@media (max-width: 419px) {
+  .alert {
+    width: 80%;
+  }
+}
+
+body:has(.sidenav-backdrop) {
+  overflow: hidden;
 }
