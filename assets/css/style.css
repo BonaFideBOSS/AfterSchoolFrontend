@@ -30,9 +30,24 @@
   font-weight: 900 !important;
 }
 
+.text-red {
+  --mdb-text-opacity: 1;
+  color: rgba(220, 53, 69, var(--mdb-text-opacity)) !important;
+}
+
+.bg-red {
+  --mdb-bg-opacity: 1;
+  background-color: rgba(220, 53, 69, var(--mdb-bg-opacity)) !important;
+}
+
 .text-purple {
   --mdb-text-opacity: 1;
   color: rgba(111, 66, 193, var(--mdb-text-opacity)) !important;
+}
+
+.bg-purple {
+  --mdb-bg-opacity: 1;
+  background-color: rgba(111, 66, 193, var(--mdb-bg-opacity)) !important;
 }
 
 .text-indigo {
@@ -40,14 +55,39 @@
   color: rgba(102, 16, 242, var(--mdb-text-opacity)) !important;
 }
 
+.bg-indigo {
+  --mdb-bg-opacity: 1;
+  background-color: rgba(102, 16, 242, var(--mdb-bg-opacity)) !important;
+}
+
 .text-orange {
   --mdb-text-opacity: 1;
   color: rgba(253, 126, 20, var(--mdb-text-opacity)) !important;
 }
 
+.bg-orange {
+  --mdb-bg-opacity: 1;
+  background-color: rgba(253, 126, 20, var(--mdb-bg-opacity)) !important;
+}
+
 .text-pink {
   --mdb-text-opacity: 1;
   color: rgba(214, 51, 132, var(--mdb-text-opacity)) !important;
+}
+
+.bg-pink {
+  --mdb-bg-opacity: 1;
+  background-color: rgba(214, 51, 132, var(--mdb-bg-opacity)) !important;
+}
+
+.text-green {
+  --mdb-text-opacity: 1;
+  color: rgba(35, 189, 25, var(--mdb-text-opacity)) !important;
+}
+
+.bg-green {
+  --mdb-bg-opacity: 1;
+  background-color: rgba(35, 189, 25, var(--mdb-bg-opacity)) !important;
 }
 
 .btn:disabled {
@@ -64,19 +104,20 @@
   display: none;
 }
 
-.lesson-card {
+.lesson-image {
   transition: transform .3s ease-in-out;
 }
 
-.lesson-card:hover {
+.lesson-card:hover .lesson-image {
   transform: scale(1.1);
-  z-index: 999;
+  z-index: 1;
 }
 
 #cart {
   position: fixed;
   bottom: 7%;
   right: 5%;
+  z-index: 2;
 }
 
 #cart .btn {
