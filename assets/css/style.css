@@ -230,13 +230,13 @@
 }
 
 @media (max-width: 587px) {
-  .alert {
+  .notification {
     width: 70%;
   }
 }
 
 @media (max-width: 419px) {
-  .alert {
+  .notification {
     width: 80%;
   }
 }
