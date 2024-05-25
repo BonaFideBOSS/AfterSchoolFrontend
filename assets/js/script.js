@@ -2,7 +2,7 @@ Vue.createApp({
   data() {
     return {
       sitename: "AfterSchool",
-      serverURL: "http://10.63.3.106:8000/",
+      serverURL: "https://afterschoolbackend.vercel.app/",
       pages: ["Home", "My Orders"],
       currentPage: "Home",
       lessons: null,
